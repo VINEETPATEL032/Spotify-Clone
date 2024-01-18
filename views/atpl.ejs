@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel="shortcut icon" href="../images/s.webp" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <div id="main">
+    <div class="left">
+        <a href="/">
+          <i class="ri-home-5-fill"></i>
+          <p>Home</p>
+        </a>
+        <a href="/search">
+          <i class="ri-search-line"></i>
+          <p>Search</p>
+        </a>
+        <a href="/liked">
+          <i class="ri-heart-fill"></i>
+          <p>Liked Songs</p>
+        </a>
+        <a id="play">
+          <i class="ri-play-list-line"></i>
+          <p>Playlist</p>
+          <i onclick="find()" id="add" class="ri-add-line"></i>
+        </a>
+        
+        <div id="nam">
+          <% user.playlist.forEach(songs=>{ %>
+            <% if(songs.name==="defaultPlaylist" ){ %>
+              <% } else{ %>
+                <div class="playlis">
+                  <h5><a href="/addtoPlaylist"><%= songs.name %> </a></h5>
+              
+                </div>
+            <% } %>
+          <% }) %>
+          </div>
+
+        <div class="currentsong">
+          <img id="img" src="https://imgs.search.brave.com/853xaEt7hUm_w72wby1_QjAVGfPiE6I2SYVBZz92_Jc/rs:fit:560:320:1/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi84Lzg0L1Nw/b3RpZnlfaWNvbi5z/dmcvNjQwcHgtU3Bv/dGlmeV9pY29uLnN2/Zy5wbmc" alt="">
+      <div class="text">
+        <h5 id="title">title</h5>
+        <p id="artist">artist</p>
+        <p id="album">album</p>
+      </div>
+        </div>
+
+        <a href="/logout" style="margin-top: 25%;">
+          <i class="ri-logout-box-r-line"></i>
+          <p>Log out</p>
+        </a>
+  </div>
+<div class="right">
+<div class="musics">
+  <% user.favorateSong.forEach(songs =>{ %>
+    <div class="song">
+      <img src="/poster/<%= songs.poster %>" alt="">
+      <div class="text">
+      <h5><%= songs.title %></h5>
+      <p><%= songs.artist %></p>
+      <p><%= songs.album %></p>
+      <div class="icons">
+      <a href="/like/<%= songs.id %>">
+        <% if(user.liked.indexOf(songs.id) === -1){ %>
+          <i class="ri-heart-line"></i>
+      <% }else{ %>
+      <i style="color: red;" class="ri-heart-fill"></i>
+      <% } %>
+      </a>
+      <% if(user.playlist.length === 2){ %>
+        <a href="/save/<%=songs._id %>"> 
+          <% if(user.favorateSong.indexOf(songs.id) === -1  ){ %>
+              <i style="color: rgb(255, 174, 0);" class="ri-shield-fill"></i>
+            
+            
+          <% } else { %>
+              <i class="ri-shield-line"></i>
+          <% } %>
+        </a>
+        <% } %>
+      </div>
+      </div>
+  <div class="playButton"  onclick="songCardClicked('<%= songs.fileName %>','/poster/<%= songs.poster %>','<%= songs.title %>','<%= songs.artist %>','<%= songs.album %>')">
+    <i class="ri-play-circle-fill"></i>
+  </div>
+</div>
+  <% }) %>
+</div>
+  </div>
+  <audio id="audio" src="" controls></audio>
+</div>
+
+<script>
+        var fl = 0
+    function songCardClicked(filename,poster,songTitle,songArtist,songAlbum) {
+    
+      document.querySelector('#audio').setAttribute('src', `/stream/${filename}`)
+      if (fl === 0) {
+        document.querySelector('#audio').play()
+        fl = 1
+      } else {
+        document.querySelector("#audio").pause()
+        fl = 0
+      }
+      var img = document.querySelector("#img")
+      var title = document.querySelector("#title")
+      var artist = document.querySelector("#artist")
+      var album = document.querySelector("#album")
+      img.src = poster
+    title.innerText = songTitle
+ artist.innerText = songArtist
+ album.innerText = songAlbum
+  
+    }
+</script>
+</body>
+</html>                                   

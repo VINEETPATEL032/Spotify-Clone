@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel="shortcut icon" href="../images/s.webp" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheets/style3.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+</head>
+<body>
+    <div id="main">
+        <div class="left">
+          <a href="/">
+            <i class="ri-home-5-fill"></i>
+            <p>Home</p>
+          </a>
+          <a>
+            <i class="ri-search-line"></i>
+            <p>Search</p>
+          </a>
+          <a href="/liked">
+            <i class="ri-heart-fill"></i>
+            <p>Liked Songs</p>
+          </a>
+          <a id="play">
+            <i class="ri-play-list-line"></i>
+            <p>Playlist</p>
+            <i onclick="find()" id="add" class="ri-add-line"></i>
+          </a>
+
+          <a>
+            <p>Currently playing song</p>
+          </a>
+          <div class="currentsong">
+            <img id="img" src="https://imgs.search.brave.com/853xaEt7hUm_w72wby1_QjAVGfPiE6I2SYVBZz92_Jc/rs:fit:560:320:1/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi84Lzg0L1Nw/b3RpZnlfaWNvbi5z/dmcvNjQwcHgtU3Bv/dGlmeV9pY29uLnN2/Zy5wbmc" alt="">
+        <div class="text">
+          <h5 id="title">title</h5>
+          <p id="artist">artist</p>
+          <p id="album">album</p>
+        </div>
+          </div>
+
+          <a href="/logout" style="margin-top: 52.4%;">
+            <i class="ri-logout-box-r-line"></i>
+            <p>Log out</p>
+          </a>
+        </div>
+        
+        <div class="right">
+            <input oninput="searchSong()" type="text" placeholder="What you want to listen?">
+            <button>Search</button>
+            <div class="musics" style="margin-top: -26%;" ></div>
+            <audio id="audio" src="" controls></audio>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+
+<script>
+
+async function searchSong(){
+const result = await axios.post('/search',{
+    search: document.querySelector('input').value
+})
+
+
+let clutter = ''
+
+result.data.songs.forEach(song => {
+    clutter +=`<div class="song" >
+  <img src="/poster/${song.poster}" alt="">
+  <div class="text">
+    <h5>${song.title}</h5>
+    <p>${song.artist}</p>
+    <p>${song.album}</p>
+  </div>
+
+  <div class="playButton" >
+    <i onclick="songCardClicked('${song.fileName}','/poster/${song.poster}','${song.title}','${song.artist}','${song.album}')" class="ri-play-circle-fill"></i>
+  </div>
+  
+</div>`
+});
+
+document.querySelector('.musics').innerHTML += clutter
+}
+
+      
+var fl = 0
+    function songCardClicked(filename,poster,songTitle,songArtist,songAlbum) {
+    
+      document.querySelector('#audio').setAttribute('src', `/stream/${filename}`)
+      if (fl === 0) {
+        document.querySelector('#audio').play()
+        fl = 1
+      } else {
+        document.querySelector("#audio").pause()
+        fl = 0
+      }
+      var img = document.querySelector("#img")
+      var title = document.querySelector("#title")
+      var artist = document.querySelector("#artist")
+      var album = document.querySelector("#album")
+      img.src = poster
+    title.innerText = songTitle
+ artist.innerText = songArtist
+ album.innerText = songAlbum
+  
+    }
+
+
+var di = document.querySelector(".di")
+  var left = document.querySelector(".left")
+  var flag = 0
+  di.addEventListener("click",function(){
+    if(flag === 0){
+ left.style.top = "0%"
+ flag = 1
+}
+else{
+ left.style.top = "-100%"
+flag = 0
+}
+  })
+
+</script>
+</body>
+</html>

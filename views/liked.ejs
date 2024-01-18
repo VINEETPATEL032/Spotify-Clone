@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel="shortcut icon" href="../images/s.webp" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheets/style2.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+</head>
+<body>
+    <div id="main">
+        <div class="left">
+          <a href="/">
+            <i class="ri-home-5-fill"></i>
+            <p>Home</p>
+          </a>
+          <a href="/search">
+            <i class="ri-search-line"></i>
+            <p>Search</p>
+          </a>
+          <a>
+            <i class="ri-heart-fill"></i>
+            <p>Liked Songs</p>
+          </a>
+          <a id="play">
+            <i class="ri-play-list-line"></i>
+            <p>Playlist</p>
+            <i onclick="find()" id="add" class="ri-add-line"></i>
+          </a>
+
+          <a>
+            <p>Created Playlist <i class="ri-arrow-down-line"></i></p>
+          </a>
+
+          <div id="nam">
+            <% user.playlist.forEach(songs=>{ %>
+              <% if(songs.name==="defaultPlaylist" ){ %>
+                <% } else{ %>
+                  <div class="playlis">
+                    <h5><a href="/addtoPlaylist"><%= songs.name %> </a></h5>
+                    <a id="delete" href="/delete/<%= songs._id %>"> <i class="ri-delete-bin-line"></i></a>
+                  </div>
+              <% } %>
+            <% }) %>
+            </div>
+    
+
+          <a>
+            <p>Currently playing song</p>
+          </a>
+          <div class="currentsong">
+            <img id="img" src="https://imgs.search.brave.com/853xaEt7hUm_w72wby1_QjAVGfPiE6I2SYVBZz92_Jc/rs:fit:560:320:1/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi84Lzg0L1Nw/b3RpZnlfaWNvbi5z/dmcvNjQwcHgtU3Bv/dGlmeV9pY29uLnN2/Zy5wbmc" alt="">
+        <div class="text">
+          <h5 id="title">title</h5>
+          <p id="artist">artist</p>
+          <p id="album">album</p>
+        </div>
+          </div>
+
+          <a href="/logout" style="margin-top: 10%;">
+            <i class="ri-logout-box-r-line"></i>
+            <p>Log out</p>
+          </a>
+        </div>
+        <div class="right">
+            <div class="musics">
+              <% user.liked.forEach(song=>{ %>
+                <div class="song">
+                  <img src="/poster/<%= song.poster %>" alt="">
+                  <div class="text">
+                    <h5><%= song.title %></h5>
+                    <p><%= song.artist %></p>
+                    <p><%= song.album %></p>
+                  </div>
+        
+                  <div class="playButton"onclick="songCardClicked('<%= song.fileName %>','/poster/<%= song.poster %>','<%= song.title %>','<%= song.artist %>','<%= song.album %>')">
+                    <i class="ri-play-circle-fill"></i>
+                  </div>
+                  <a 
+                  href="/like/<%= song.id %>">
+                    <% if(user.liked.indexOf(song.id) === -1){ %>
+                      <i style="color: red; font-size: 40px; margin-left: 65px;" class="ri-heart-fill"></i>
+                     
+                  <% }else{ %>
+                   
+                    <i class="ri-heart-line"></i>
+               <% } %>
+                  </a>
+                </div>
+                <% }) %>
+            </div>
+            <audio id="audio" src="" controls></audio>
+        </div>
+    </div>
+    
+
+      <script>
+               var fl = 0
+               function songCardClicked(filename,poster,songTitle,songArtist,songAlbum) {
+    
+    document.querySelector('#audio').setAttribute('src', `/stream/${filename}`)
+    if (fl === 0) {
+      document.querySelector('#audio').play()
+      fl = 1
+    } else {
+      document.querySelector("#audio").pause()
+      fl = 0
+    }
+    var img = document.querySelector("#img")
+    var title = document.querySelector("#title")
+    var artist = document.querySelector("#artist")
+    var album = document.querySelector("#album")
+    img.src = poster
+  title.innerText = songTitle
+artist.innerText = songArtist
+album.innerText = songAlbum
+
+  }
+
+      </script>
+</body>
+</html>
